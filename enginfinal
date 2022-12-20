@@ -1,0 +1,162 @@
+using System;
+
+namespace engininkii2
+{
+    class Program
+    {
+        static void Main(string[] args)
+        {
+            int gameStatus = 0;
+            int currentPlayer = -1;
+            char[] testEGame = { '1', '2', '3', '4', '5', '6', '7', '8', '9' };
+            Console.Title = " You will Lost ";
+
+            Console.BackgroundColor = ConsoleColor.Black;
+            Console.ForegroundColor = ConsoleColor.Red;
+
+            do
+            {
+                Console.Clear();
+
+                currentPlayer = GetNextPlayer(currentPlayer);
+
+                HeadsUpDisplay(currentPlayer);
+                DrawGameboard(testEGame);
+
+                GameEngine(testEGame, currentPlayer);
+
+
+
+
+            } while (gameStatus.Equals(0));
+
+            Console.Clear();
+            HeadsUpDisplay(currentPlayer);
+            DrawGameboard(testEGame);
+            if (gameStatus.Equals(1))
+            {
+                Console.WriteLine($"Player {currentPlayer} is the winner!");
+            }
+
+            if (gameStatus.Equals(2))
+            {
+                Console.WriteLine($"The game is a draw!");
+            }
+        }
+
+
+
+        private static bool IsGameDraw(char[] testEGame)
+        {
+            return testEGame[0] != '1' &&
+                   testEGame[1] != '2' &&
+                   testEGame[2] != '3' &&
+                   testEGame[3] != '4' &&
+                   testEGame[4] != '5' &&
+                   testEGame[5] != '6' &&
+                   testEGame[6] != '7' &&
+                   testEGame[7] != '8' &&
+                   testEGame[8] != '9';
+        }
+
+        private static bool IsumutGameTheSame(char[] testEGame, int pos1, int pos2, int pos3)
+        {
+            return testEGame[pos1].Equals(testEGame[pos2]) && testEGame[pos2].Equals(testEGame[pos3]);
+        }
+
+        private static void GameEngine(char[] Engininki, int currentPlayer)
+        {
+            bool notValidMove = true;
+
+            do
+            {
+
+                string userInput = Console.ReadLine();
+
+                if (!string.IsNullOrEmpty(userInput) &&
+                    (userInput.Equals("1") ||
+                    userInput.Equals("2") ||
+                    userInput.Equals("3") ||
+                    userInput.Equals("4") ||
+                    userInput.Equals("5") ||
+                    userInput.Equals("6") ||
+                    userInput.Equals("7") ||
+                    userInput.Equals("8") ||
+                    userInput.Equals("9")))
+                {
+
+                    int.TryParse(userInput, out var gamePlacementMarker);
+
+                    char currentMarker = Engininki[gamePlacementMarker - 1];
+
+                    if (currentMarker.Equals('X') || currentMarker.Equals('O'))
+                    {
+                        Console.WriteLine("Placement has already a marker please select anotyher placement.");
+                    }
+                    else
+                    {
+                        Engininki[gamePlacementMarker - 1] = GetPlayerMarker(currentPlayer);
+
+                        notValidMove = false;
+                    }
+                }
+                else
+                {
+                    Console.WriteLine("Invalid value please select anotyher placement.");
+                }
+            } while (notValidMove);
+        }
+
+        private static char GetPlayerMarker(int player)
+        {
+            if (player % 2 == 0)
+            {
+                return 'O';
+            }
+
+            return 'X';
+        }
+
+        static void HeadsUpDisplay(int PlayerNumber)
+
+        {
+
+            Console.WriteLine("********************************");
+            Console.WriteLine("Welcome to the Engin Game!");
+            Console.WriteLine("********************************");
+            Console.ForegroundColor = ConsoleColor.Blue;
+
+            Console.WriteLine("********************************");
+            Console.WriteLine("Player 1: X");
+            Console.WriteLine("Player 2: O");
+            Console.WriteLine();
+            Console.WriteLine("********************************");
+            Console.BackgroundColor = ConsoleColor.Black;
+            Console.ForegroundColor = ConsoleColor.White;
+            Console.WriteLine($"Player {PlayerNumber} to move, select 1 thorugh 9 from the game board.");
+            Console.WriteLine();
+        }
+
+        static void DrawGameboard(char[] Engininki)
+        {
+
+
+            Console.WriteLine($"         {Engininki[0]} | {Engininki[1]} | {Engininki[2]}        ");
+            Console.WriteLine("         ---+---+---                                           ");
+            Console.WriteLine($"         {Engininki[3]} | {Engininki[4]} | {Engininki[5]}        ");
+            Console.WriteLine("         ---+---+---    ");
+            Console.WriteLine($"         {Engininki[6]} | {Engininki[7]} | {Engininki[8]}        ");
+            Console.WriteLine("--------------------------------------------");
+        }
+
+        static int GetNextPlayer(int player)
+        {
+            if (player.Equals(1))
+            {
+                return 2;
+            }
+
+            return 1;
+        }
+    }
+}
