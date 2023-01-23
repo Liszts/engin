@@ -1,0 +1,115 @@
+using System;
+
+class TicTacToeGame
+{
+    private GameBoard board;
+    private int turns;
+    private GameDisplay display;
+
+    public TicTacToeGame()
+    {
+        this.board = new GameBoard();
+        this.display = new GameDisplay();
+        this.turns = 0;
+    }
+
+    public void Play()
+    {
+        display.PrintBoard(board);
+
+        while (true)
+        {
+            int row, col;
+            char player;
+
+            if (turns % 2 == 0)
+            {
+                player = 'X';
+            }
+            else
+            {
+                player = 'O';
+            }
+
+            Console.WriteLine("Player " + player + ", enter row and column (e.g. 0 1)");
+            string[] input = Console.ReadLine().Split();
+            row = int.Parse(input[0]);
+            col = int.Parse(input[1]);
+
+            if (!board.MakeMove(row, col, player))
+            {
+                Console.WriteLine("Invalid move, try again");
+                continue;
+            }
+
+            turns++;
+
+            display.PrintBoard(board);
+
+            if (board.IsWin(player))
+            {
+                Console.WriteLine("Player " + player + " wins!");
+                break;
+            }
+            else if (turns == 9)
+            {
+                Console.WriteLine("It's a tie!");
+                break;
+            }
+        }
+    }
+}
+
+class GameBoard
+{
+    private char[,] board = new char[3, 3] {
+        { ' ', ' ', ' ' },
+        { ' ', ' ', ' ' },
+        { ' ', ' ', ' ' }
+    };
+
+    public bool MakeMove(int row, int col, char player)
+    {
+        if (board[row, col] != ' ')
+        {
+            return false;
+        }
+
+        board[row, col] = player;
+        return true;
+    }
+
+    public bool IsWin(char player)
+    {
+        // check rows
+        for (int i = 0; i < 3; i++)
+        {
+            if (board[i, 0] == player && board[i, 1] == player && board[i, 2] == player)
+            {
+                return true;
+            }
+        }
+
+        // check columns
+        for (int i = 0; i < 3; i++)
+        {
+            if (board[0, i] == player && board[1, i] == player && board[2, i] == player)
+            {
+                return true;
+            }
+        }
+
+        // check diagonals
+        if (board[0, 0] == player && board[1, 1] == player && board[2, 2] == player)
+        {
+            return true;
+        }
+        if (board[0, 2] == player && board[1, 1] == player && board[2, 0] == player)
+        {
+            return true;
+        }
+
+        return false;
+    }
+
+    public char[,] GetBoard()
